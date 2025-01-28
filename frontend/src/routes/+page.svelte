@@ -5,6 +5,9 @@
     import axios from 'axios';
     let orderRequest = "";
     let responseMessage = "";
+    /**
+     * @type {any[]}
+     */
     let orders = []
     let totals = {"burgers" : 0, "fries" : 0, "drinks": 0}
     let showAlert = false;
@@ -81,8 +84,9 @@
                         }
 
                     });
-
-                    orders.push(orderObject)
+                    orders = [...orders, orderObject];
+                    //orders.push(orderObject)
+                    console.log("all orders: ", orders)
                     totals["burgers"] +=  orderObject["burgers"]
                     totals["fries"] +=  orderObject["fries"]
                     totals["drinks"] +=  orderObject["drinks"]
@@ -93,7 +97,6 @@
                     
                 }
 
-                orderRequest = "";
 
             } else {
 
@@ -103,6 +106,7 @@
             // @ts-ignore
             console.log(`Error: ${error.message}`);
         }
+        orderRequest = "";
     }
 
 </script>
@@ -131,6 +135,20 @@
         >
             Run
         </Button>
+    </div>
+        <!-- Display Orders -->
+    <div class="mt-6 p-6 bg-gray-100 rounded-lg">
+    <Label>Orders</Label>
+    <ul>
+        {#each orders as order, index (order)}
+        <li class="p-2 border-b-2">
+            Order #{index + 1}: 
+            {order.burgers} burgers, 
+            {order.fries} fries, 
+            {order.drinks} drinks
+        </li>
+        {/each}
+    </ul>
     </div>
       <!-- Alert Message -->
     {#if showAlert}
