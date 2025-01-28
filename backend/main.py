@@ -3,7 +3,7 @@ import openai
 import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
-
+from fastapi.middleware.cors import CORSMiddleware
 
 class TextInput(BaseModel):
     text: str  # The field to accept unstructured text
@@ -12,6 +12,14 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")  # Add your OpenAI API key here
 client = openai.OpenAI()
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[ "http://localhost:5173", "*"],  # Replace with your frontend's origin (e.g., "http://localhost:5173/")
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if __name__ == "__main__":
     import uvicorn
@@ -31,10 +39,12 @@ async def ok_endpoint():
 async def askchat_endpoint(input : TextInput):
     #quant item, quant item, ....
     #cancel order num
+    print("HERE")
     message = input.text
+    print("messsage: ", message)
     prompt = f''' 
         You are a drive thru ordering system that allows customers to place or cancel their orders.
-        There are three order items :  1) burgers, 2) fries, or 3) drinks.
+        There are only three order items :  1) burgers, 2) fries, or 3) drinks.
         Orders can contain one or multiple items and 1 or multiple quantities of each item  
         If they are requesting an order please respond by stating the quantity followed by a space followed by the item name followed by a comma then a space.
         For the last item or if there is only one kind of item, omit the comma and space after it
@@ -42,6 +52,7 @@ async def askchat_endpoint(input : TextInput):
         If the user is requesting to cancel the item, expect a order number to cancel. Your response to cancellations should be the word cancel followed
         by a space followed by the word order followed by the order number. 
         for example: cancel order 4
+        If the request does not meet any of these rules then please respond with : "invalid"
         You are given the following request:"{message}", please respond accordingly
     '''
     completion = client.chat.completions.create(
@@ -56,4 +67,5 @@ async def askchat_endpoint(input : TextInput):
     )
     #return {"message": f"{message}"}
     completion_obj = completion.choices[0].message.content
+    print("order: ", completion_obj)
     return {"message": f"{completion_obj}"}
