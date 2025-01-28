@@ -70,7 +70,8 @@ async def askchat_endpoint(input : TextInput):
         If the user is requesting to cancel the item, expect a order number to cancel. Your response to cancellations should be the word cancel followed
         by a space followed by the word order followed by the order number. 
         for example: cancel order 4
-        If the request does not meet any of these rules then please respond with : "invalid"
+        If the request does not meet any of these rules then please respond with : "invalid".
+        Users can request these orders in a wide range of ways so dont be too strict, it just has to imply that they want to either cancel an order number or order any number of those three items
         You are given the following request:"{message}", please respond accordingly
     '''
     completion = client.chat.completions.create(
