@@ -7,6 +7,8 @@
     let responseMessage = "";
     let orders = []
     let totals = {"burgers" : 0, "fries" : 0, "drinks": 0}
+    let showAlert = false;
+    let alertType = "";  // "success" or "error"
     async function addOrder(){
         console.log("here11111")
         
@@ -53,6 +55,9 @@
                     //TO DO 
                 }else if (hasInvalid){
                     //invalid entry deal with it
+                    alertType = "error";
+                    showAlert = true;
+                    setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
                 }
                 else{
                     let orderObject = {"burgers" : 0, "fries" : 0, "drinks": 0}
@@ -82,8 +87,13 @@
                     totals["fries"] +=  orderObject["fries"]
                     totals["drinks"] +=  orderObject["drinks"]
                     console.log(totals)
+                    alertType = "success";
+                    showAlert = true;
+                    setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
                     
                 }
+
+                orderRequest = "";
 
             } else {
 
@@ -93,7 +103,6 @@
             // @ts-ignore
             console.log(`Error: ${error.message}`);
         }
-        orderRequest = "";
     }
 
 </script>
@@ -123,4 +132,10 @@
             Run
         </Button>
     </div>
+      <!-- Alert Message -->
+    {#if showAlert}
+    <div class={`fixed top-0 left-0 right-0 p-4 ${alertType === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white text-center`}>
+        {alertType === 'success' ? 'Your order has been placed successfully!' : 'Your order was invalid!'}
+    </div>
+    {/if}
 </main>
