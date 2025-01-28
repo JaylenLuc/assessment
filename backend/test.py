@@ -9,7 +9,7 @@ import json
 url = "http://127.0.0.1:8000/askchat"
 url2 = "http://127.0.0.1:8000/ok"
 
-data = {"text": "i want 1 burger and 1 fry and a drink"}
+data = {"text": "i want 4 burgers and 1 fry and a drink"}
 
 resp = requests.post(url, json=data)
 #resp = requests.get(url2)

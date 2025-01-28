@@ -2,6 +2,7 @@
     import { Button } from '../lib/components/ui/button';
     import { Input } from '../lib/components/ui/input';
     import { Label } from '../lib/components/ui/label';
+    import axios from 'axios';
     let orderRequest = "";
     let responseMessage = "";
     let orders = []
@@ -11,18 +12,39 @@
         
         try{
             const data = { text: orderRequest };
-            const res = await fetch('http://127.0.0.1:8000/askchat', {
-                method: 'POST',
-                headers: 
-                    {
-                        'Content-Type': 'application/json'
-                    },
-                body: JSON.stringify(data)
-            })
-            if (res.ok) {
+            // const res = await fetch('https://solid-halibut-v75479p7j9q2x4qr-8000.app.github.dev/askchat', {
+            //     method: 'POST',
+            //     headers: 
+            //         {
+            //             'Content-Type': 'application/json',
+                        
+            //         },
+            //     body: JSON.stringify(data),
+            //     credentials: 'include' 
+            // })
+            console.log("Attempting to send order:", orderRequest);
+    
+            const API_URL = 'https://solid-halibut-v75479p7j9q2x4qr-8000.app.github.dev/askchat';
+        
+        // First, try a preflight request
+            
+            const res = await axios({
+                method: 'post',
+                url: API_URL,
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false,
+            });
+
+        console.log("Response:", res.data);
+            if (res.data && res.data.message) {
                 console.log("OK")
-                const data = await res.json(); // Parse the JSON response
-                responseMessage = data.message; // Extract the message from the response
+                const responseMessage = await res.data.message; // Parse the JSON response
+                // responseMessage = data.message; // Extract the message from the response
                 //quant item, quant item, ....
                 //cancel order num
                 const hasCancel = responseMessage.toLowerCase().includes("cancel");
@@ -34,7 +56,7 @@
                 }
                 else{
                     let orderObject = {"burgers" : 0, "fries" : 0, "drinks": 0}
-                    let responseArray = responseMessage.split(', ').forEach(itemarr => {
+                    let responseArray = responseMessage.split(', ').forEach((/** @type {string} */ itemarr) => {
                         let singleOrder = itemarr.split(' ');
                         let quant = Number(singleOrder[0])
                         let item = singleOrder[1]

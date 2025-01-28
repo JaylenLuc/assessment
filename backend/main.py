@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 import openai
 import os
 from dotenv import load_dotenv
@@ -13,17 +13,24 @@ openai.api_key = os.getenv("OPENAI_API_KEY")  # Add your OpenAI API key here
 client = openai.OpenAI()
 app = FastAPI()
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[ "http://localhost:5173", "*"],  # Replace with your frontend's origin (e.g., "http://localhost:5173/")
-    allow_credentials=True,
+    allow_origins=["*"],  # Allows all origins in development
+    allow_credentials=False,  # Changed to False since we're allowing all origins
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
-
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",  # Allow external connections
+        port=8000,
+        reload=True
+    )
 
 
 @app.get("/")
@@ -35,6 +42,17 @@ async def first_endpoint():
 async def ok_endpoint():
     return {"message": "hello world"}
 
+@app.options("/askchat")
+async def options_handler():
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "3600",
+        }
+    )
 @app.post("/askchat")
 async def askchat_endpoint(input : TextInput):
     #quant item, quant item, ....
