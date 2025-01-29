@@ -30,7 +30,7 @@
             // })
             console.log("Attempting to send order:", orderRequest);
     
-            const API_URL = 'https://solid-halibut-v75479p7j9q2x4qr-8000.app.github.dev/askchat';
+            const API_URL =  import.meta.env.VITE_API_URL;
         
         // First, try a preflight request
             
@@ -179,3 +179,23 @@
     </div>
     {/if}
 </main>
+
+<style>
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+  
+    li {
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+  
+    .order-item {
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
