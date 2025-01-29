@@ -60,10 +60,12 @@
                     const index = Number(cancelMessage) - 1
                     console.log(index)
                     let currOrder = orders[index]
-                    if (!currOrder){
+                    if (currOrder == undefined){
                         alertType = "error";
+                        alertMessage = `Your request to cancel order ${index +1} is invalid`
                         showAlert = true;
                         setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
+                        return;
 
                     }
                     totals["burgers"] -= currOrder["burgers"]
