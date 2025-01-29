@@ -57,9 +57,9 @@ async def options_handler():
 async def askchat_endpoint(input : TextInput):
     #quant item, quant item, ....
     #cancel order num
-    print("HERE")
+    #print("HERE")
     message = input.text
-    print("messsage: ", message)
+    #print("messsage: ", message)
     prompt = f''' 
         You are a drive thru ordering system that allows customers to place or cancel their orders.
         There are only three order items :  1) burgers, 2) fries, or 3) drinks.

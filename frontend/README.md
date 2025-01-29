@@ -9,3 +9,6 @@ To run the development server `npm run dev`.
 ## Additional
 
 We use [tailwind](https://tailwindcss.com/), [this component library](https://www.shadcn-svelte.com/) and [these icons](https://lucide.dev/icons/) which I've already installed in this project.
+
+## JAYLEN'S NOTES
+please refer to the .env.example file and place your fast api URL in the environment variable "VITE_API_URL" so the frontend client code knows where to send requests
