@@ -11,6 +11,7 @@
     let orders = []
     let totals = {"burgers" : 0, "fries" : 0, "drinks": 0}
     let showAlert = false;
+    let alertMessage = "";
     let alertType = "";  // "success" or "error"
     async function addOrder(){
         console.log("here11111")
@@ -55,10 +56,30 @@
                 const hasCancel = responseMessage.toLowerCase().includes("cancel");
                 const hasInvalid = responseMessage.toLowerCase().includes("invalid");
                 if (hasCancel){
-                    //TO DO 
+                    let cancelMessage = responseMessage.split(' ')[2];
+                    const index = Number(cancelMessage) - 1
+                    console.log(index)
+                    let currOrder = orders[index]
+                    if (!currOrder){
+                        alertType = "error";
+                        showAlert = true;
+                        setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
+
+                    }
+                    totals["burgers"] -= currOrder["burgers"]
+                    totals["fries"] -= currOrder["fries"]
+                    totals["drinks"] -=  currOrder["drinks"]
+                    orders = orders.filter((_, i) => i !== index);
+
+
+                    alertType = "success";
+                    alertMessage = `Your request to cancel order number ${index+1} has been successfull!!`
+                    showAlert = true;
+                    setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
                 }else if (hasInvalid){
                     //invalid entry deal with it
                     alertType = "error";
+                    alertMessage = "Your request was invalid :( "
                     showAlert = true;
                     setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
                 }
@@ -92,6 +113,7 @@
                     totals["drinks"] +=  orderObject["drinks"]
                     console.log(totals)
                     alertType = "success";
+                    alertMessage = "Your Order has been placed successfully!"
                     showAlert = true;
                     setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
                     
@@ -153,7 +175,7 @@
       <!-- Alert Message -->
     {#if showAlert}
     <div class={`fixed top-0 left-0 right-0 p-4 ${alertType === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white text-center`}>
-        {alertType === 'success' ? 'Your order has been placed successfully!' : 'Your order was invalid!'}
+        {alertMessage}
     </div>
     {/if}
 </main>
