@@ -62,7 +62,7 @@
                     const index = Number(cancelMessage) - 1
                     console.log(index)
                     let currOrder = orders[index]
-                    if (currOrder == undefined){
+                    if (currOrder == undefined || index <= -1 || index >= orders.length){
                         //ALERT CASES
                         alertType = "error";
                         alertMessage = `Your request to cancel order ${index +1} is invalid`
