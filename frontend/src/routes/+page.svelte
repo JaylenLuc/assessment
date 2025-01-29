@@ -13,8 +13,8 @@
     let showAlert = false;
     let alertMessage = "";
     let alertType = "";  // "success" or "error"
+    
     async function addOrder(){
-        console.log("here11111")
         
         try{
             const data = { text: orderRequest };
@@ -55,12 +55,15 @@
                 //cancel order num
                 const hasCancel = responseMessage.toLowerCase().includes("cancel");
                 const hasInvalid = responseMessage.toLowerCase().includes("invalid");
+
+                //CASES CAN EXTEND WITH ANOTHER ELSE IF BEFORE THE ELSE CASE
                 if (hasCancel){
                     let cancelMessage = responseMessage.split(' ')[2];
                     const index = Number(cancelMessage) - 1
                     console.log(index)
                     let currOrder = orders[index]
                     if (currOrder == undefined){
+                        //ALERT CASES
                         alertType = "error";
                         alertMessage = `Your request to cancel order ${index +1} is invalid`
                         showAlert = true;
@@ -85,7 +88,7 @@
                     showAlert = true;
                     setTimeout(() => showAlert = false, 2000); // Hide after 2 seconds
                 }
-                else{
+                else{ //VALID ORDER CASE
                     let orderObject = {"burgers" : 0, "fries" : 0, "drinks": 0}
                     let responseArray = responseMessage.split(', ').forEach((/** @type {string} */ itemarr) => {
                         let singleOrder = itemarr.split(' ');
